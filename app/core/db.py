@@ -3,7 +3,7 @@ from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker, declarative_base
 from sqlalchemy.pool import QueuePool, NullPool
 from app.core.config import settings
-from app.core.ddl import apply_ddl
+from app.core.data_definition_language import run_data_definition_language
 
 Base = declarative_base()
 logger = logging.getLogger(__name__)
@@ -58,7 +58,7 @@ def _init() -> None:
         pool_pre_ping=True,
     )
 
-    apply_ddl(_engine)
+    run_data_definition_language(_engine)
 
     _sessionmaker = sessionmaker(
         bind=_engine,

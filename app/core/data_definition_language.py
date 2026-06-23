@@ -7,7 +7,7 @@ logger = logging.getLogger(__name__)
 _SQL_DIR = Path(__file__).parent / "sql"
 
 
-def apply_ddl(engine) -> None:
+def run_data_definition_language(engine) -> None:
     sql_files = sorted(_SQL_DIR.glob("*.sql"))
     with engine.begin() as conn:
         for path in sql_files:
