@@ -3,7 +3,7 @@ from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker, declarative_base
 from sqlalchemy.pool import QueuePool, NullPool
 from app.core.config import settings
-from app.core.data_definition_language import run_data_definition_language
+from app.core.create_database import create_db
 
 Base = declarative_base()
 logger = logging.getLogger(__name__)
@@ -18,11 +18,11 @@ def _ensure_database_exists() -> None:
     CREATE DATABASE cannot run inside a transaction, so we use AUTOCOMMIT isolation.
     NullPool prevents connection reuse against the bootstrap database.
     """
-    bootstrap_url = (
+    url = (
         f"postgresql+psycopg2://{settings.DB_USER}:{settings.DB_PASSWORD}"
         f"@{settings.DB_HOST}:{settings.DB_PORT}/postgres"
     )
-    engine = create_engine(bootstrap_url, poolclass=NullPool)
+    engine = create_engine(url, poolclass=NullPool)
     with engine.connect() as conn:
         conn.execution_options(isolation_level="AUTOCOMMIT")
         exists = conn.execute(
@@ -58,7 +58,7 @@ def _init() -> None:
         pool_pre_ping=True,
     )
 
-    run_data_definition_language(_engine)
+    create_db(_engine)
 
     _sessionmaker = sessionmaker(
         bind=_engine,
