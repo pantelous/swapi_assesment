@@ -1,0 +1,26 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "docker-compose debug up",
+            "type": "shell",
+            "command": "docker-compose -f docker-compose.yml -f docker-compose.debug.yml up --build",
+            "isBackground": true,
+            "problemMatcher": {
+                "pattern": {
+                    "regexp": "^$"
+                },
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": "^.*Starting.*$",
+                    "endsPattern": "^.*Waiting for debugger.*$"
+                }
+            }
+        },
+        {
+            "label": "docker-compose debug down",
+            "type": "shell",
+            "command": "docker-compose -f docker-compose.yml -f docker-compose.debug.yml down"
+        }
+    ]
+}
