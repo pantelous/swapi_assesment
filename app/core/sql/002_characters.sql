@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS characters (
-    id          SERIAL       PRIMARY KEY,
+    id          INTEGER PRIMARY KEY,
     name        VARCHAR(255) NOT NULL,
     height      VARCHAR(50),
     mass        VARCHAR(50),

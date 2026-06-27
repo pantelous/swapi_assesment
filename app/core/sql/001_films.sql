@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS films (
-    id            SERIAL       PRIMARY KEY,
+    id          INTEGER PRIMARY KEY,
     title         VARCHAR(255) NOT NULL,
     episode_id    INTEGER      UNIQUE NOT NULL,
     opening_crawl TEXT,
