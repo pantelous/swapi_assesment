@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 
 from app.core.sql_query import SqlQuery
 from app.modules.character.infrastructure.persistance.sql_queries.character_query import search_characters_by_name_query
+from app.uow.swapi_uow import SqlSwapiUoW
 
 
 class SearchCharacterQuery(BaseModel):
@@ -18,11 +19,10 @@ class SearchCharacterQuery(BaseModel):
 
 
 def search_characters(
-    session: Session,
-    query_params: SearchCharacterQuery,
+    uow: SqlSwapiUoW,
+    query_params: SearchCharacterQuery
 ) -> list[dict[str, Any]]:
 
-    with session:
-        query, params = search_characters_by_name_query(query_params.name)
-        sql_query = SqlQuery(session, query, params)
-        return sql_query.fetch_all()
+    with uow:
+        character_name = uow.character_repo.search_character(character_name=query_params.name)
+        return character_name

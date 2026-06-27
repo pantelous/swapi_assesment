@@ -85,3 +85,43 @@ def get_character_query(character_id: int) -> tuple[str, dict]:
     """
     params = {"character_id": character_id}
     return query, params
+
+
+def get_characters_paginated_query(limit: int, offset: int) -> tuple[str, dict]:
+    query = """
+        SELECT id,
+               name,
+               height,
+               mass,
+               hair_color,
+               skin_color,
+               eye_color,
+               birth_year,
+               gender,
+               homeworld,
+               swapi_url
+          FROM characters
+         ORDER BY id
+         LIMIT :limit OFFSET :offset
+    """
+    params = {"limit": limit, "offset": offset}
+    return query, params
+
+
+def get_films_for_character_query(character_id: int) -> tuple[str, dict]:
+    query = """
+        SELECT f.id,
+               f.title,
+               f.episode_id,
+               f.opening_crawl,
+               f.director,
+               f.producer,
+               f.release_date,
+               f.swapi_url
+          FROM films f
+          JOIN characters_films cf ON cf.film_id = f.id
+         WHERE cf.character_id = :character_id
+         ORDER BY f.episode_id
+    """
+    params = {"character_id": character_id}
+    return query, params

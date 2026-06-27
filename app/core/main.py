@@ -1,6 +1,6 @@
 import uvicorn
 from contextlib import asynccontextmanager
-from fastapi import FastAPI
+from fastapi import FastAPI, Response
 from app.core.config import settings
 from app.core.db import _init
 from pathlib import Path
@@ -77,17 +77,13 @@ async def application_exception_handler(_request: Request, exc: ApplicationExcep
     )
 
 app.include_router(character.router, prefix="/character", tags=["character"])
-# app.include_router(starship.router, prefix="/starship", tags=["starship"])
+app.include_router(starship.router, prefix="/starship", tags=["starship"])
 app.include_router(film.router, prefix="/film", tags=["film"])
 
 @app.get("/health")
 def health():
     return {"status": "ok"}
 
-
-# def main():
-#     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
-
-
-# if __name__ == "__main__":
-#     main()
+@app.get("/favicon.ico", include_in_schema=False)
+async def favicon():
+    return Response(status_code=204)

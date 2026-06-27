@@ -3,18 +3,20 @@ from typing import Annotated
 import httpx
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
+from app.api.injections.get_swapi_uow import get_swapi_uow
 from app.core.config import settings
-from app.core.db_session import get_session
+from app.modules.film.application.use_case.get_films import GetFilmsQuery, get_films
 from app.modules.film.application.use_case.register_films import register_films
-from app.modules.film.domain.repo.film_repo import FilmRepoI
+from app.modules.film.application.use_case.search_films import SearchFilmQuery, search_films
 from app.modules.film.infrastructure.persistance.sql_repository.film_repo import SqlFilmRepo
+from app.uow.swapi_uow import SqlSwapiUoW
 
 router = APIRouter(prefix="")
 
 
 @router.get("/store-films")
 async def register_films_route(
-    repo: FilmRepoI = Depends(SqlFilmRepo)
+    uow: SqlSwapiUoW = Depends(get_swapi_uow)
     ):
     all_films = []
     url = f"{settings.SWAPI_BASE_URL}/films/"
@@ -27,5 +29,29 @@ async def register_films_route(
             all_films.extend(data.get("results", []))
             url = data.get("next")
 
-    registered = register_films(films=all_films, repo=repo)
+    registered = register_films(films=all_films, uow=uow)
     return {"registered": len(registered)}
+
+@router.get("/get-films")
+def get_films_route(
+    query_params: Annotated[GetFilmsQuery, Query()],
+    uow: SqlSwapiUoW = Depends(get_swapi_uow),
+):
+    return get_films(uow=uow, query_params=query_params)
+
+@router.get("/search-film")
+def film_search_route(
+    query_params: Annotated[SearchFilmQuery, Query()],
+    uow: SqlSwapiUoW = Depends(get_swapi_uow),
+):
+    return search_films(uow=uow, query_params=query_params)
+
+
+@router.get("/fetch-films")
+async def fectch_films_route():
+    async with httpx.AsyncClient() as client:
+        response = await client.get(f"{settings.SWAPI_BASE_URL}/films/")
+        if response.status_code == 404:
+            raise HTTPException(status_code=404, detail="Films not found")
+        response.raise_for_status()
+        return response.json()
