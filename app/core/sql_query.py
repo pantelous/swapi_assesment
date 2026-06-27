@@ -2,7 +2,8 @@ from typing import Any, Callable, TypeVar
 
 from sqlalchemy.orm import Session
 from sqlalchemy import text
-
+from sqlalchemy.exc import SQLAlchemyError
+from app.core.exception import ApplicationException
 from app.core.request import OrderBy
 
 
@@ -46,14 +47,20 @@ class SqlQuery:
         return row[0]
     
     def persist(self) -> None:
-        self.session.execute(text(self.query)) if not self.params else self.session.execute(text(self.query), self.params)
+        try:
+            self.session.execute(text(self.query)) if not self.params else self.session.execute(text(self.query), self.params)
+        except SQLAlchemyError as e:
+            raise ApplicationException(message=str("Error during data persist"), type="DatabaseError")
         return
     
     def fetch_one(self, transformer: Callable[[dict[str, Any]], T] | None = None, **transformer_kwargs) -> dict[str, Any] | T | None:
         """Execute the query and fetch a single result."""
         query = text(self.query)
-        cursor = self.session.execute(query) if not self.params else self.session.execute(query, self.params)
-
+        try:
+            cursor = self.session.execute(query) if not self.params else self.session.execute(query, self.params)
+        except SQLAlchemyError as e:
+            raise ApplicationException(message=str("Error during fetching a single element"), type="DatabaseError")
+    
         row = cursor.fetchone()
         if not row:
             return None
@@ -64,8 +71,10 @@ class SqlQuery:
     
     def fetch_all(self, transformer: Callable[[dict[str, Any]], T] | None = None) -> list[dict[str, Any]] | list[T]:
         """Execute the query and fetch all results."""
-        cursor = self.session.execute(text(self.query)) if not self.params else self.session.execute(text(self.query), self.params)
-
+        try:
+            cursor = self.session.execute(text(self.query)) if not self.params else self.session.execute(text(self.query), self.params)
+        except SQLAlchemyError as e:
+            raise ApplicationException(message=str("Error during fetching multiple elements"), type="DatabaseError")
         if transformer:
             return [transformer(row._asdict()) for row in cursor]
         return [row._asdict() for row in cursor]

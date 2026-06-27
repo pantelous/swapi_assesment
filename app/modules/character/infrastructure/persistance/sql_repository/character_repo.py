@@ -14,7 +14,6 @@ from app.modules.character.infrastructure.persistance.sql_queries.character_quer
     link_character_film_query,
     search_characters_by_name_query,
 )
-from app.modules.character.infrastructure.transformers.character_transformers import transform_character_data
 
 class SqlCharacterRepo(CharacterRepoI, SqlBaseRepository):
 

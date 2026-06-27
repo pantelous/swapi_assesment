@@ -26,3 +26,7 @@ class FilmRepoI(ABC):
     @abstractmethod
     def get_characters_for_film(self, film_id: int) -> list[dict]:
         raise NotImplementedError
+
+    @abstractmethod
+    def link_film_starship(self, film_id: int, starship_id: int) -> None:
+        raise NotImplementedError

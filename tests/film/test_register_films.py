@@ -82,3 +82,19 @@ class TestFilmConstruction:
 
     def test_returns_film_instance(self):
         assert isinstance(film_from_dict(film_payload()), Film)
+
+    def test_starships_are_mapped(self):
+        payload = film_payload(starships=[
+            "https://swapi.dev/api/starships/2/",
+            "https://swapi.dev/api/starships/3/",
+        ])
+        film = film_from_dict(payload)
+        assert film.starships == [
+            "https://swapi.dev/api/starships/2/",
+            "https://swapi.dev/api/starships/3/",
+        ]
+
+    def test_starships_absent_defaults_to_empty_list(self):
+        payload = film_payload()
+        payload.pop("starships", None)
+        assert film_from_dict(payload).starships == []
