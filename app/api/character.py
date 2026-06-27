@@ -23,12 +23,20 @@ async def register_characters_route(
     url = f"{settings.SWAPI_BASE_URL}/people/"
 
     async with httpx.AsyncClient() as client:
-        while url:
-            response = await client.get(url)
-            response.raise_for_status()
-            data = response.json()
-            all_characters.extend(data.get("results", []))
-            url = data.get("next")
+        try:
+            while url:
+                response = await client.get(url)
+                response.raise_for_status()
+                data = response.json()
+                all_characters.extend(data.get("results", []))
+                url = data.get("next")
+        
+        except httpx.TimeoutException:
+            raise HTTPException(status_code=504, detail="API request timed out")
+        except httpx.HTTPStatusError as e:
+            raise HTTPException(status_code=502, detail=f"API returned {e.response.status_code}")
+        except httpx.RequestError as e:
+            raise HTTPException(status_code=503, detail="Could not reach API")
 
     registered = register_characters(characters=all_characters, uow= uow)
     return {"registered": len(registered)}
@@ -52,9 +60,16 @@ def character_search_route(
 
 @router.get("/fetch-characters")
 async def fectch_characters_route():
-    async with httpx.AsyncClient() as client:
-        response = await client.get(f"{settings.SWAPI_BASE_URL}/people/")
-        if response.status_code == 404:
-            raise HTTPException(status_code=404, detail="Characters not found")
-        response.raise_for_status()
-        return response.json()
+    try:
+        async with httpx.AsyncClient() as client:
+            response = await client.get(f"{settings.SWAPI_BASE_URL}/people/")
+            if response.status_code == 404:
+                raise HTTPException(status_code=404, detail="Characters not found")
+            response.raise_for_status()
+            return response.json()
+    except httpx.TimeoutException:
+        raise HTTPException(status_code=504, detail="API request timed out")
+    except httpx.HTTPStatusError as e:
+        raise HTTPException(status_code=502, detail=f"API returned {e.response.status_code}")
+    except httpx.RequestError as e:
+        raise HTTPException(status_code=503, detail="Could not reach API")

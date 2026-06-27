@@ -83,6 +83,14 @@ def get_films_paginated_query(limit: int, offset: int) -> tuple[str, dict]:
     return query, params
 
 
+def link_film_starship_query(film_id: int, starship_id: int) -> tuple[str, dict]:
+    query = """
+        INSERT INTO starships_films (starship_id, film_id)
+        VALUES (:starship_id, :film_id)
+    """
+    return query, {"film_id": film_id, "starship_id": starship_id}
+
+
 def get_characters_for_film_query(film_id: int) -> tuple[str, dict]:
     query = """
         SELECT ch.id,

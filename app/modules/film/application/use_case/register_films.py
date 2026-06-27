@@ -1,10 +1,9 @@
 from typing import Any, List
-
+from app.core.protocol import get_value
 from app.modules.character.application.use_case.register_characters import id_from_url
 from app.modules.film.application.service.load_film import load_film_id
 from app.modules.film.domain.film.entity import Film, FilmId
 from app.uow.swapi_uow import SqlSwapiUoW
-
 
 def film_from_dict(film_data: dict[str, Any]) -> Film:
     id = id_from_url(film_data.get("url"))
@@ -17,6 +16,7 @@ def film_from_dict(film_data: dict[str, Any]) -> Film:
         producer=film_data.get("producer"),
         release_date=film_data.get("release_date"),
         swapi_url=film_data.get("url"),
+        starships=film_data.get("starships", []),
     )
 
 
@@ -24,10 +24,8 @@ def register_films(
         films: list[dict[str, Any]],
         uow: SqlSwapiUoW
         ) -> List[Film]:
-
     with uow:
         registered = []
-
         for film_data in films:
             film_id = id_from_url(film_data.get("url"))
             film_id = load_film_id(uow.film_repo, film_id)
@@ -35,6 +33,16 @@ def register_films(
                 continue
             film = film_from_dict(film_data)
             uow.film_repo.register_film(film)
+
+            for char_url in film_data.get("characters", []):
+                swapi_character_id = id_from_url(char_url)
+                uow.character_repo.link_character_film(swapi_character_id, get_value(film.id))
+
+
+            for starship_url in film_data.get("starships", []):
+                starship_id = id_from_url(starship_url)
+                uow.film_repo.link_film_starship(get_value(film.id), starship_id)
+
             registered.append(film)
 
         return registered

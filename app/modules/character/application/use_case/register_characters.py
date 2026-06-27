@@ -34,7 +34,6 @@ def character_from_dict(char_data: dict[str, Any]) -> Character:
 
 def register_characters(
         characters: list[dict[str, Any]],
-        repo: CharacterRepoI,
         uow: SwapiUoWI
     ) -> List[Character]:
 
@@ -47,13 +46,6 @@ def register_characters(
             if character_id:
                 continue
             character = character_from_dict(char_data)
-            
-            repo.register_character(character)
-
-            swapi_character_id = id_from_url(char_data["url"])
-            for film_url in char_data.get("films", []):
-                swapi_film_id = id_from_url(film_url)
-                repo.link_character_film(swapi_character_id, swapi_film_id)
-
+            uow.character_repo.register_character(character)
             registered.append(character)
         return registered

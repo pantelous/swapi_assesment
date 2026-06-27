@@ -8,7 +8,6 @@ from app.core.config import settings
 from app.modules.film.application.use_case.get_films import GetFilmsQuery, get_films
 from app.modules.film.application.use_case.register_films import register_films
 from app.modules.film.application.use_case.search_films import SearchFilmQuery, search_films
-from app.modules.film.infrastructure.persistance.sql_repository.film_repo import SqlFilmRepo
 from app.uow.swapi_uow import SqlSwapiUoW
 
 router = APIRouter(prefix="")
@@ -22,13 +21,19 @@ async def register_films_route(
     url = f"{settings.SWAPI_BASE_URL}/films/"
 
     async with httpx.AsyncClient() as client:
-        while url:
-            response = await client.get(url)
-            response.raise_for_status()
-            data = response.json()
-            all_films.extend(data.get("results", []))
-            url = data.get("next")
-
+        try:
+            while url:
+                response = await client.get(url)
+                response.raise_for_status()
+                data = response.json()
+                all_films.extend(data.get("results", []))
+                url = data.get("next")
+        except httpx.TimeoutException:
+            raise HTTPException(status_code=504, detail="API request timed out")
+        except httpx.HTTPStatusError as e:
+            raise HTTPException(status_code=502, detail=f"API returned {e.response.status_code}")
+        except httpx.RequestError as e:
+            raise HTTPException(status_code=503, detail="Could not reach API")
     registered = register_films(films=all_films, uow=uow)
     return {"registered": len(registered)}
 
@@ -50,8 +55,15 @@ def film_search_route(
 @router.get("/fetch-films")
 async def fectch_films_route():
     async with httpx.AsyncClient() as client:
-        response = await client.get(f"{settings.SWAPI_BASE_URL}/films/")
-        if response.status_code == 404:
-            raise HTTPException(status_code=404, detail="Films not found")
-        response.raise_for_status()
-        return response.json()
+        try:
+            response = await client.get(f"{settings.SWAPI_BASE_URL}/films/")
+            if response.status_code == 404:
+                raise HTTPException(status_code=404, detail="Films not found")
+            response.raise_for_status()
+            return response.json()
+        except httpx.TimeoutException:
+            raise HTTPException(status_code=504, detail="API request timed out")
+        except httpx.HTTPStatusError as e:
+            raise HTTPException(status_code=502, detail=f"API returned {e.response.status_code}")
+        except httpx.RequestError as e:
+            raise HTTPException(status_code=503, detail="Could not reach API")

@@ -4,7 +4,7 @@ from app.core.base_repository import SqlBaseRepository
 from app.modules.film.domain.film.entity import Film
 from app.modules.film.domain.repo.film_repo import FilmRepoI
 from app.core.sql_query import SqlQuery
-from app.modules.film.infrastructure.persistance.sql_queries.film_query import get_characters_for_film_query, get_film_query, get_films_paginated_query, insert_film_query, search_films_by_title_query
+from app.modules.film.infrastructure.persistance.sql_queries.film_query import get_characters_for_film_query, get_film_query, get_films_paginated_query, insert_film_query, link_film_starship_query, search_films_by_title_query
 
 
 class SqlFilmRepo(FilmRepoI, SqlBaseRepository):
@@ -31,4 +31,8 @@ class SqlFilmRepo(FilmRepoI, SqlBaseRepository):
         query, params = get_characters_for_film_query(film_id)
         sql_query = SqlQuery(self.session, query, params)
         return sql_query.fetch_all()
+
+    def link_film_starship(self, film_id: int, starship_id: int) -> None:
+        query, params = link_film_starship_query(film_id, starship_id)
+        SqlQuery(self.session, query, params).persist()
         

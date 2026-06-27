@@ -17,3 +17,4 @@ class Film(BaseModel):
     producer: Optional[str] = None
     release_date: Optional[str] = None
     swapi_url: Optional[str] = None
+    starships: list[str] = []

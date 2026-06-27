@@ -1,6 +1,5 @@
 class DomainException(Exception):
     """Base class for domain exceptions."""
-
     def __init__(
         self,
         message: str,
@@ -14,11 +13,8 @@ class DomainException(Exception):
         self.error_code = error_code
 
         super().__init__(f"{field}: {message}")
-
-
 class ApplicationException(Exception):
     """Base class for domain exceptions."""
-
     def __init__(
         self,
         message: str,

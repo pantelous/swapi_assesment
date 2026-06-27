@@ -6,7 +6,6 @@ logger = logging.getLogger(__name__)
 
 _SQL_DIR = Path(__file__).parent / "sql"
 
-
 def create_db(engine) -> None:
     sql_files = sorted(_SQL_DIR.glob("*.sql"))
     with engine.begin() as conn:
