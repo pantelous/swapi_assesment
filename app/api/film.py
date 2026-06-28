@@ -13,7 +13,7 @@ from app.uow.swapi_uow import SqlSwapiUoW
 router = APIRouter(prefix="")
 
 
-@router.get("/store-films")
+@router.get("/store-films", summary = "Store films from SWAPI")
 async def register_films_route(
     uow: SqlSwapiUoW = Depends(get_swapi_uow)
     ):
@@ -37,14 +37,15 @@ async def register_films_route(
     registered = register_films(films=all_films, uow=uow)
     return {"registered": len(registered)}
 
-@router.get("/get-films")
+@router.get("/get-films", summary="Get all films from the database")
 def get_films_route(
     query_params: Annotated[GetFilmsQuery, Query()],
     uow: SqlSwapiUoW = Depends(get_swapi_uow),
 ):
     return get_films(uow=uow, query_params=query_params)
 
-@router.get("/search-film")
+
+@router.get("/search-film", summary="Search films from db")
 def film_search_route(
     query_params: Annotated[SearchFilmQuery, Query()],
     uow: SqlSwapiUoW = Depends(get_swapi_uow),
@@ -52,7 +53,7 @@ def film_search_route(
     return search_films(uow=uow, query_params=query_params)
 
 
-@router.get("/fetch-films")
+@router.get("/fetch-films", summary = "Just Fetch and display films from SWAPI")
 async def fectch_films_route():
     async with httpx.AsyncClient() as client:
         try:
