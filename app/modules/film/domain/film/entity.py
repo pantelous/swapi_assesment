@@ -1,3 +1,4 @@
+from datetime import date
 from typing import Optional
 from pydantic import BaseModel
 
@@ -15,6 +16,7 @@ class Film(BaseModel):
     opening_crawl: Optional[str] = None
     director: Optional[str] = None
     producer: Optional[str] = None
-    release_date: Optional[str] = None
+    release_date: Optional[date] = None
     swapi_url: Optional[str] = None
+    votes: Optional[int] = None
     starships: list[str] = []

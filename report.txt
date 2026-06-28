@@ -1,0 +1,81 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.13.1, pytest-9.1.1, pluggy-1.6.0
+rootdir: /Users/pantpapastergiou/swapi_assessment
+configfile: pyproject.toml
+plugins: anyio-4.14.0, cov-7.1.0, asyncio-1.4.0
+asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collected 194 items
+
+tests/character/test_character_queries.py .........                      [  4%]
+tests/character/test_character_use_cases.py .........                    [  9%]
+tests/character/test_get_characters_query.py ............                [ 15%]
+tests/character/test_register_characters.py ............                 [ 21%]
+tests/character/test_search_characters.py ....                           [ 23%]
+tests/film/test_film_queries.py .............                            [ 30%]
+tests/film/test_film_use_cases.py .................                      [ 39%]
+tests/film/test_get_films_query.py ............                          [ 45%]
+tests/film/test_register_films.py ..............                         [ 52%]
+tests/film/test_search_films.py ....                                     [ 54%]
+tests/starship/test_get_starships_query.py ............                  [ 60%]
+tests/starship/test_register_starships.py ...............                [ 68%]
+tests/starship/test_search_starships.py ....                             [ 70%]
+tests/starship/test_starship_queries.py ...........                      [ 76%]
+tests/starship/test_starship_use_cases.py ..........                     [ 81%]
+tests/test_exceptions.py ...................                             [ 91%]
+tests/test_protocol.py ........                                          [ 95%]
+tests/test_value_object.py .........                                     [100%]
+
+=============================== warnings summary ===============================
+app/core/config.py:4
+  /Users/pantpapastergiou/swapi_assessment/app/core/config.py:4: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    class Settings(BaseSettings):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+================================ tests coverage ================================
+_______________ coverage: platform darwin, python 3.13.1-final-0 _______________
+
+Name                                                                                Stmts   Miss  Cover   Missing
+-----------------------------------------------------------------------------------------------------------------
+app/__init__.py                                                                         0      0   100%
+app/core/__init__.py                                                                    0      0   100%
+app/core/base_repository.py                                                             6      1    83%   10
+app/core/base_uow.py                                                                   31     18    42%   11, 15-20, 23, 26-28, 32, 35-40
+app/core/config.py                                                                     14      0   100%
+app/core/create_database.py                                                            13      7    46%   10-16
+app/core/db.py                                                                         36     21    42%   21-37, 42-63, 75-78
+app/core/entity_protocol.py                                                            23      0   100%
+app/core/exception.py                                                                  14      0   100%
+app/core/main.py                                                                       42     42     0%   1-89
+app/core/protocol.py                                                                    7      0   100%
+app/core/request.py                                                                    11      0   100%
+app/core/sql_query.py                                                                  57     40    30%   14-15, 18, 22-25, 30-31, 35-37, 42-47, 50-54, 58-70, 74-80
+app/modules/character/application/service/load_character.py                             5      0   100%
+app/modules/character/application/use_case/get_characters.py                           17      0   100%
+app/modules/character/application/use_case/register_characters.py                      26      0   100%
+app/modules/character/application/use_case/search_characters.py                        17      0   100%
+app/modules/character/domain/character/entity.py                                       18      0   100%
+app/modules/character/domain/repo/character_repo.py                                    21      6    71%   8, 12, 16, 20, 24, 28
+app/modules/character/infrastructure/persistance/sql_queries/character_query.py        26      0   100%
+app/modules/character/infrastructure/persistance/sql_repository/character_repo.py      32     18    44%   21-24, 27-28, 31-33, 36-38, 41-43, 46-48
+app/modules/film/application/service/load_film.py                                      11      0   100%
+app/modules/film/application/use_case/get_films.py                                     17      0   100%
+app/modules/film/application/use_case/register_films.py                                27      0   100%
+app/modules/film/application/use_case/search_films.py                                  13      0   100%
+app/modules/film/application/use_case/vote_film.py                                     14      0   100%
+app/modules/film/domain/film/entity.py                                                 17      0   100%
+app/modules/film/domain/repo/film_repo.py                                              27      8    70%   8, 12, 16, 20, 24, 28, 32, 36
+app/modules/film/infrastructure/persistance/sql_queries/film_query.py                  34      3    91%   86-100
+app/modules/film/infrastructure/persistance/sql_repository/film_repo.py                36     20    44%   14-16, 19-20, 23-24, 28-29, 32-33, 36-38, 41-42, 45-48
+app/modules/film/infrastructure/transformers/film_transformer.py                        6      4    33%   5-20
+app/modules/starship/application/service/load_starship.py                               3      0   100%
+app/modules/starship/application/use_case/get_starships.py                             18      0   100%
+app/modules/starship/application/use_case/register_starships.py                        23      0   100%
+app/modules/starship/application/use_case/search_starships.py                          13      0   100%
+app/modules/starship/domain/repo/starship_repo.py                                      27      8    70%   9, 13, 17, 21, 25, 29, 33, 37
+app/modules/starship/domain/starship/entity.py                                         23      0   100%
+app/modules/starship/infrastructure/persistance/sql_queries/starship_query.py          28      0   100%
+app/modules/starship/infrastructure/persistance/sql_repository/starship_repo.py        31     17    45%   20-22, 25-26, 29-30, 33-34, 37-38, 41-42, 45-46, 49-50
+app/uow/swapi_uow.py                                                                   50     16    68%   22, 26, 29, 33, 37, 48-52, 55, 58, 61-65
+-----------------------------------------------------------------------------------------------------------------
+TOTAL                                                                                 834    229    73%
+======================== 194 passed, 1 warning in 1.14s ========================

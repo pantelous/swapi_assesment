@@ -1,6 +1,7 @@
 from typing import Any
 from pydantic import BaseModel, model_validator
 from app.uow.swapi_uow import SqlSwapiUoW
+
 class SearchFilmQuery(BaseModel):
     name: str
 

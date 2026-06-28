@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-
 from app.modules.starship.domain.starship.entity import Starship
 
 
