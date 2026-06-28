@@ -11,7 +11,7 @@ from app.uow.swapi_uow import SqlSwapiUoW
 
 router = APIRouter(prefix="")
 
-@router.get("/store-starships")
+@router.get("/store-starships", summary="Store starships from SWAPI")
 async def register_starships_route(
     uow: SqlSwapiUoW = Depends(get_swapi_uow),
 ):
@@ -37,7 +37,7 @@ async def register_starships_route(
     return {"registered": len(registered)}
 
 
-@router.get("/get-starships")
+@router.get("/get-starships", summary="Get all starships from database")
 def get_starships_route(
     query_params: Annotated[GetStarshipsQuery, Query()],
     uow: SqlSwapiUoW = Depends(get_swapi_uow),
@@ -45,7 +45,7 @@ def get_starships_route(
     return get_starships(uow=uow, query_params=query_params)
 
 
-@router.get("/search-starship")
+@router.get("/search-starship", summary="Search starships from db")
 def search_starship_route(
     query_params: Annotated[SearchStarshipQuery, Query()],
     uow: SqlSwapiUoW = Depends(get_swapi_uow),
@@ -53,7 +53,7 @@ def search_starship_route(
     return search_starships(uow=uow, query_params=query_params)
 
 
-@router.get("/fetch-starships")
+@router.get("/fetch-starships", summary="Just Fetch and display starships from SWAPI")
 async def fetch_starships_route():
     try:
         async with httpx.AsyncClient(timeout=10) as client:

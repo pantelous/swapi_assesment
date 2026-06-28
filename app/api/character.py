@@ -15,7 +15,7 @@ from app.modules.character.infrastructure.persistance.sql_repository.character_r
 router = APIRouter(prefix="")
 
 
-@router.get("/store-characters")
+@router.get("/store-characters", summary = "Store characters from SWAPI")
 async def register_characters_route(
     uow: SqlSwapiUoW = Depends(get_swapi_uow)
     ):
@@ -42,7 +42,7 @@ async def register_characters_route(
     return {"registered": len(registered)}
 
 
-@router.get("/get-characters")
+@router.get("/get-characters", summary = "Get all characters from db")
 def get_characters_route(
     query_params: Annotated[GetCharactersQuery, Query()],
     uow: SqlSwapiUoW = Depends(get_swapi_uow),
@@ -50,7 +50,7 @@ def get_characters_route(
     return get_characters(uow=uow, query_params=query_params)
 
 
-@router.get("/search-character")
+@router.get("/search-character", summary = "Search characters from db")
 def character_search_route(
     query_params: Annotated[SearchCharacterQuery, Query()],
     uow: SqlSwapiUoW = Depends(get_swapi_uow)
@@ -58,7 +58,7 @@ def character_search_route(
     return search_characters(uow=uow, query_params=query_params)
 
 
-@router.get("/fetch-characters")
+@router.get("/fetch-characters", summary = "Just Fetch and display characters from SWAPI")
 async def fectch_characters_route():
     try:
         async with httpx.AsyncClient() as client:
