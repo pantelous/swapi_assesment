@@ -13,6 +13,7 @@ def search_films_by_title_query(title: str) -> tuple[str, dict]:
                director,
                producer,
                release_date,
+               votes,
                swapi_url
           FROM films
          WHERE title LIKE :title
