@@ -8,6 +8,7 @@ from app.core.config import settings
 from app.modules.film.application.use_case.get_films import GetFilmsQuery, get_films
 from app.modules.film.application.use_case.register_films import register_films
 from app.modules.film.application.use_case.search_films import SearchFilmQuery, search_films
+from app.modules.film.application.use_case.vote_film import VoteFilmQuery, vote_film
 from app.uow.swapi_uow import SqlSwapiUoW
 
 router = APIRouter(prefix="")
@@ -68,3 +69,14 @@ async def fectch_films_route():
             raise HTTPException(status_code=502, detail=f"API returned {e.response.status_code}")
         except httpx.RequestError as e:
             raise HTTPException(status_code=503, detail="Could not reach API")
+        
+    
+@router.post("/vote-film")
+def film_vote_route(
+    query_params: Annotated[VoteFilmQuery, Query()],
+    uow: SqlSwapiUoW = Depends(get_swapi_uow),
+):
+    film = vote_film(
+        uow=uow, query_params=query_params
+    )
+    return film

@@ -1,3 +1,5 @@
+from datetime import date
+
 import pytest
 
 from app.modules.film.application.use_case.register_films import (
@@ -57,7 +59,7 @@ class TestFilmConstruction:
         assert film.opening_crawl == "It is a period of civil war..."
         assert film.director == "George Lucas"
         assert film.producer == "Gary Kurtz, Rick McCallum"
-        assert film.release_date == "1977-05-25"
+        assert film.release_date == date(1977, 5, 25)
         assert film.swapi_url == "https://swapi.dev/api/films/1/"
 
     def test_optional_fields_absent_default_to_none(self):

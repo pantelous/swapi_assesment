@@ -74,12 +74,30 @@ def get_films_paginated_query(limit: int, offset: int) -> tuple[str, dict]:
                director,
                producer,
                release_date,
-               swapi_url
+               swapi_url,
+               votes
           FROM films
          ORDER BY episode_id
          LIMIT :limit OFFSET :offset
     """
     params = {"limit": limit, "offset": offset}
+    return query, params
+
+def get_film_by_name_query(film_name: str) -> tuple[str, dict]:
+    query = """
+        SELECT id,
+               title,
+               episode_id,
+               opening_crawl,
+               director,
+               producer,
+               release_date,
+               swapi_url,
+               votes
+          FROM films
+          WHERE title = :title
+    """
+    params = {"title": film_name}
     return query, params
 
 
@@ -110,4 +128,19 @@ def get_characters_for_film_query(film_id: int) -> tuple[str, dict]:
          ORDER BY ch.id
     """
     params = {"film_id": film_id}
+    return query, params
+
+def update_film_votes_query(film: Film) -> tuple[str, dict[str, Any]]:
+
+    query = """
+        UPDATE films
+        SET votes = :votes
+        WHERE id = :film_id
+"""
+
+    params = {
+            'film_id': get_value(film.id),
+            'votes': film.votes,
+    }
+    
     return query, params

@@ -1,3 +1,5 @@
+from datetime import date
+
 from app.modules.film.domain.film.entity import Film, FilmId
 from app.modules.film.infrastructure.persistance.sql_queries.film_query import (
     get_characters_for_film_query,
@@ -6,6 +8,7 @@ from app.modules.film.infrastructure.persistance.sql_queries.film_query import (
     insert_film_query,
     link_film_starship_query,
     search_films_by_title_query,
+    update_film_votes_query,
 )
 
 A_NEW_HOPE = Film(
@@ -17,6 +20,7 @@ A_NEW_HOPE = Film(
     producer="Gary Kurtz, Rick McCallum",
     release_date="1977-05-25",
     swapi_url="https://swapi.dev/api/films/1/",
+    votes = 1
 )
 
 
@@ -49,7 +53,7 @@ class TestInsertFilmQuery:
         assert params["opening_crawl"] == "It is a period of civil war..."
         assert params["director"] == "George Lucas"
         assert params["producer"] == "Gary Kurtz, Rick McCallum"
-        assert params["release_date"] == "1977-05-25"
+        assert params["release_date"] == date(1977, 5, 25)
         assert params["swapi_url"] == "https://swapi.dev/api/films/1/"
 
     def test_optional_fields_are_none_when_absent(self):
@@ -79,3 +83,22 @@ class TestGetCharactersForFilmQuery:
     def test_params_contain_film_id(self):
         _, params = get_characters_for_film_query(4)
         assert params["film_id"] == 4
+
+
+class TestUpdateFilmVotesQuery:
+    def test_film_id_is_unwrapped_value(self):
+        _, params = update_film_votes_query(A_NEW_HOPE)
+        assert params["film_id"] == 1
+
+    def test_votes_are_included_in_params(self):
+        _, params = update_film_votes_query(A_NEW_HOPE)
+        assert params["votes"] == 1
+
+    def test_query_targets_films_table(self):
+        query, _ = update_film_votes_query(A_NEW_HOPE)
+        assert "films" in query.lower()
+
+    def test_returns_query_and_params(self):
+        query, params = update_film_votes_query(A_NEW_HOPE)
+        assert isinstance(query, str)
+        assert isinstance(params, dict)
