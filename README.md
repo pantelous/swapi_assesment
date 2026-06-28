@@ -96,7 +96,7 @@ Before starting to interact with the API, you need to populate the database with
 To do so, you'll need to try the store related endpoints in the API Docs at
 - Swagger UI: `http://localhost:8000/docs`
   
-# Important: Please, you'll need to populate characters first, then starships and then films, otherwise you'll get errors.
+## Important: Please, you'll need to populate characters first, then starships and then films, otherwise you'll get errors.
 
 You can vote for your favourite movie by just typing the name of the movie on the `vote-film` endpoint.
 
