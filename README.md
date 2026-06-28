@@ -1,4 +1,4 @@
-# swapi_assesment# Project Name
+## swapi_assesment
 
 The curernt API interfaces with the [Star Wars API](https://swapi.py4e.com/), to fetch, store, search and retrieve, characters, films and starships drawn from the star wars movies. The project is built using python and fastapi, and deployed using docker. Although, the project is containerised with  docker, it has only been tested that it works properly on macOs 26.2 and Windows 11.
 
