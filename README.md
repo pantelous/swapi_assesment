@@ -15,7 +15,9 @@ Make sure you have the following installed before running the project:
    docker --version
    docker compose version
    ```
+
 If not, continue reading the instructions. If yes you can jump directly to the [Getting Started](#getting-started) section.
+
 ---
 
 ## Installing Docker
