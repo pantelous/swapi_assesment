@@ -51,8 +51,8 @@ If not, continue reading the instructions. If yes you can jump directly to the [
 ### 1. Clone the repository
 In the macOS terminal or Windows Command Prompt, run the following command:
 ```bash
-git clone https://github.com/your-username/your-repo.git
-cd your-repo
+git clone https://github.com/pantelous/swapi_assesment.git
+cd swapi_assesment
 ```
 
 ### 2. Set up environment variables
