@@ -73,7 +73,13 @@ copy .env.example .env.docker
 ```
 ---
 
-### 3. Build and run with Docker Compose
+### 3. Start Docker desktop
+
+Start the Docker Desktop application you downloaded in ## Installing Docker.
+
+---
+
+### 4. Build and run with Docker Compose
 
 You can use one of the two following commands to build the application and run it:
 
